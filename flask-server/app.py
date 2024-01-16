@@ -20,41 +20,6 @@ def index():
 Router.run(app)
 
 if __name__ == '__main__':
-    # with app.app_context():
-    #     db.create_all() # <--- create db object.
-    app.run(host='localhost', port='8081', debug=True) #here
+    app.run(host='localhost', port='8081') #here
 
-#===============
-
-# from flask import Flask,request,render_template,url_for,jsonify,redirect,flash
-# from flask_sqlalchemy import SQLAlchemy
-
-# Init App
-# app = Flask(__name__)
-# our database uri
-
-
-# Create A Model For Table
-# class User(db.Model):
-#     _tablename_ = 'user'
-#     id = db.Column(db.Integer, primary_key=True)
-#     email = db.Column(db.String(1000))
-#     password = db.Column(db.String(6000))
-
-# @app.route('/',methods=['GET'])
-# def index():
-#     posts = User.query.all()
-
-# @app.route('/posts',methods=['GET','POST'])
-# def add_posts():
-#     if request.method == 'POST':
-#         data = request.json
-#         email = data['emailSignIn']
-#         password = data['passwordSignIn']
-#         # createdAt = datetime.today().date()
-#         new_user = User(email = email, password = password)
-#         db.session.add(new_user)
-#         db.session.commit()
-#         print(new_user)
-#     return jsonify(str(new_user))
 

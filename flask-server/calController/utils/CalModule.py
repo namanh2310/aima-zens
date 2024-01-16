@@ -21,20 +21,15 @@ def format_sketch_data(data):
 def sketchGraph(data, solution):
     input = ''
     output = ''
-    print('datatatataat', data)
     input = format_sketch_data(data)
     output = solution
-    print("iiiinput", input)
-    print("oooutput", output)
     
     if '=' in data:
         equation_string = input
         # expr = equation_string
         expr = simplify(equation_string)
-        print("exprexprexprexprexprexprexprexprexpr", expr)
     elif 'x' in output:
         equation_string = output
-        print("equation_stringequation_stringequation_string", equation_string)
         expr = simplify(latex2sympy(equation_string))
     else:
         return None
@@ -49,15 +44,13 @@ def sketchGraph(data, solution):
     plt.xlabel('x')
     plt.ylabel('y')
     plt.grid(True)
+
     # Save image
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
     buffer.seek(0)
-
     base64_encoded = base64.b64encode(buffer.read()).decode()
-
     plt.close()
-
     base64_data_uri = "data:image/png;base64," + base64_encoded
 
     return base64_data_uri

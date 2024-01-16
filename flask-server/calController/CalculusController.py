@@ -16,14 +16,6 @@ class CalculusController:
     def fundamental():
         if request.method == "POST":
             try:
-        
-                def format_sketch_data(data):
-                    rhs = data.split('=')[-1].strip()
-                    lhs = data.split('=')[0].strip()
-                    expression_rhs = latex2sympy(rhs)
-                    expression_lhs = latex2sympy(lhs)
-                    expression = expression_lhs - expression_rhs
-                    return expression
                 step = []
                 data = request.json['data']
                 raw_data = repr(data.replace("dx", ""))
@@ -45,13 +37,11 @@ class CalculusController:
                                 if match:
                                     try:
                                         result = integrate(arg, x)
-                                        print("sadasdasdas", arg)
 
                                         conclu = sympify(sympy_converter).doit()
                                         step.append([latex(arg),
                                                 latex(result),
                                                 latex(conclu)])
-                                        print(step[0])
                                         break
                                     except:
                                         break
@@ -60,7 +50,6 @@ class CalculusController:
                                         matches = re.findall(pattern, str(arg))
                                         for match in matches:
                                             result = integrate(match, x)
-                                            print("sadasdasdas", result)
                                             conclu = sympify(arg).doit()
                                             step.append([latex(match),
                                                 latex(str(result)),
@@ -83,9 +72,7 @@ class CalculusController:
                         expression_rhs = latex2sympy(rhs)
                         expression_lhs = latex2sympy(lhs)
                         expression = expression_lhs - expression_rhs
-                        print('~~~~~~~~', expression)
                         equation = Eq(expression, 0)
-                        print("23123123212131231231231232", solution)
                         x, y, u = symbols('x y u')
                         
                         try:
@@ -113,7 +100,6 @@ class CalculusController:
 
                         def rounded_cal(equation):
                             latex_eq = latex(equation)
-                            print("====================aaaaaa=====", len(latex_eq))
                             if len(latex2latex(latex_eq)) > 200:
                                 # cách giải cho các bài toán k có rule (done)
                                 if type(latex2sympy(latex_eq)[0]) == type(Eq(x, 1)):
@@ -121,7 +107,6 @@ class CalculusController:
                                 else:
                                     print(False)
                                 for i in latex2sympy(latex_eq):
-                                    print("lenenene", len(latex2sympy(latex_eq)))
                                     expression = i
                                     result = expression.rhs.evalf()
                                     rounded_result = round(result, 4)
@@ -156,7 +141,6 @@ class CalculusController:
 
                         #update mới nhất
                         if len(solution) > 200:
-                            print("huhuhu")
                             return rounded_cal(equation)
                         # tới đây
 
@@ -194,7 +178,6 @@ class CalculusController:
                             # tính toán thông thường
                             step.append(factor(expression))
                 try:
-                    print(sketchGraph(data, solution))
                     return jsonify({'result': solution,'equation': data , 'step': step, 'img': sketchGraph(data, solution)})
                 except Exception as e:
                     print(e)
@@ -202,7 +185,6 @@ class CalculusController:
                     # return jsonify({'message': 'error'})
 
             except ValueError:
-                print('lalalallaallascascsacascsac')
                 return jsonify({'message': "error"})
     
     
