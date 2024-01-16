@@ -18,7 +18,7 @@ def format_sketch_data(data):
     expression = expression_lhs - expression_rhs
     return expression
 
-def sketchGraph(data, solution, step):
+def sketchGraph(data, solution):
     input = ''
     output = ''
     print('datatatataat', data)

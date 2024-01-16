@@ -194,54 +194,7 @@ class CalculusController:
                             # tính toán thông thường
                             step.append(factor(expression))
                 try:
-                    # input = ''
-                    # output = ''
-                    # print('datatatataat', data)
-                    # input = format_sketch_data(data)
-                    # output = solution
-                    # print("iiiinput", input)
-                    # print("oooutput", output)
-                    
-                    # if '=' in data:
-                    #     equation_string = input
-                    #     # expr = equation_string
-                    #     expr = simplify(equation_string)
-                    #     print("exprexprexprexprexprexprexprexprexpr", expr)
-                    # elif 'x' in output:
-                    #     equation_string = output
-                    #     print("equation_stringequation_stringequation_string", equation_string)
-                    #     expr = simplify(latex2sympy(equation_string))
-                    # else:
-                    #     return jsonify({'equation': data, 'result': solution, 'step': step})
-
-                    # x = symbols('x')
-                    # func = lambdify(x, expr, "numpy")
-                    # x_values = np.linspace(-2, 5, 400)
-                    # y_values = func(x_values)   
-                    # plt.figure(figsize=(8, 6))
-                    # plt.plot(x_values, y_values, label=f'y = {latex(expr)}')
-                    # plt.title('Graph of ' + f'y = {latex(expr)}')
-                    # plt.xlabel('x')
-                    # plt.ylabel('y')
-                    # plt.grid(True)
-                    # # Save image
-                    # buffer = io.BytesIO()
-                    # plt.savefig(buffer, format='png')
-                    # buffer.seek(0)
-
-                    # base64_encoded = base64.b64encode(buffer.read()).decode()
-
-                    # plt.close()
-
-                    # base64_data_uri = "data:image/png;base64," + base64_encoded
-                    
-                    # sketchGraph(data, solution)
-
-                    # print('data:', data)
-                    # print('solution:', solution)
-                    # print("Step ở đây", step)
-
-                    # return jsonify({'equation': data, 'result': solution, 'step': step, 'img': base64_data_uri})
+                    print(sketchGraph(data, solution))
                     return jsonify({'result': solution,'equation': data , 'step': step, 'img': sketchGraph(data, solution)})
                 except Exception as e:
                     print(e)
