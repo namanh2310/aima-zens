@@ -37,7 +37,7 @@ const Fundamental = ({navigation}) => {
               if (res.data.result.length < 1000) {
                 navigation.navigate('Fundamental SOL', {
                   data: res.data.result,
-                  equation: res.data.equation,  
+                  equation: res.data.equation,
                   step: res.data.step,
                   img: res.data.img,
                 });
@@ -50,7 +50,7 @@ const Fundamental = ({navigation}) => {
           });
       } catch (error) {
         // navigation.navigate('TabNavigator');
-        console.log(123);
+        console.log(error);
       }
     };
     getData();

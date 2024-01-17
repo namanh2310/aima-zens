@@ -10,7 +10,8 @@ from scipy.optimize import fsolve
 import json
 import os
 from calController.utils.CalModule import sketchGraph
-
+from calController.steps.Integral import handleIntegral
+from calController.steps.Equation import handleEquation
 
 class CalculusController: 
     def fundamental():
@@ -18,171 +19,28 @@ class CalculusController:
             try:
                 step = []
                 data = request.json['data']
+                print(data)
                 raw_data = repr(data.replace("dx", ""))
                 print(raw_data)
                 try: 
                     expr = sympify(raw_data)
                     sympy_converter = latex2sympy(expr)
                     solution = latex2latex(expr)
-                except:
+                except ValueError:
                     return jsonify({'message': "error"})
-                pattern = r"\b\w+\(([^,]+)"
-                pattern_exception = r'\([^,]+,\s*[^,]+,\s*[^)]+\)'
                 x = Symbol('x')
 
                 if '=' not in expr:
-                    for arg in sympy_converter.args:
-                            if len(sympy_converter.args) == 2:
-                                match = re.match(pattern_exception, str(sympy_converter.args[1]))  
-                                if match:
-                                    try:
-                                        result = integrate(arg, x)
-
-                                        conclu = sympify(sympy_converter).doit()
-                                        step.append([latex(arg),
-                                                latex(result),
-                                                latex(conclu)])
-                                        break
-                                    except:
-                                        break
-                                else:
-                                    if 'Integral' in str(arg):
-                                        matches = re.findall(pattern, str(arg))
-                                        for match in matches:
-                                            result = integrate(match, x)
-                                            conclu = sympify(arg).doit()
-                                            step.append([latex(match),
-                                                latex(str(result)),
-                                                latex(str(conclu))])
-                            else:
-                                if 'Integral' in str(arg):
-                                    matches = re.findall(pattern, str(arg))
-                                    for match in matches:
-                                        result = integrate(match, x)
-                                        conclu = sympify(arg).doit()
-                                        step.append([latex(match),
-                                                latex(str(result)),
-                                                latex(str(conclu))])
+                    handleIntegral(sympy_converter, step, x)
                                                 
                 elif '=' in expr:
-                        rhs = expr.split('=')[-1].strip()
-                        lhs = expr.split('=')[0].strip()
-                        len_x = 0
-
-                        expression_rhs = latex2sympy(rhs)
-                        expression_lhs = latex2sympy(lhs)
-                        expression = expression_lhs - expression_rhs
-                        equation = Eq(expression, 0)
-                        x, y, u = symbols('x y u')
-                        
-                        try:
-                            poly_equation = Poly(equation.lhs, x)
-                            coefficients = poly_equation.all_coeffs()
-                            all_degrees = [degree(term) for term in poly_equation.as_expr().as_ordered_terms()]
-                        except Exception as e:
-                            coefficients = []
-                            all_degrees = []
-                        
-                        all_factors = factor(expression)
-                        ordered_factors = all_factors.as_ordered_factors()     
-                        rounded_vals = []
-
-                        def re_calc(values):
-                            for value in values:
-                                value = latex(value)
-                                value = value.replace(" i", "I")
-                                step.append(f"Subtitute back \\(u = x^{{2}}\\) and solve for x")
-                                problem = f"x^2 = {value}"
-                                step.append(f"\\({latex2latex(problem)}\\)")
-
-                        def immediately_cal(equation):
-                            return latex2latex(equation)    
-
-                        def rounded_cal(equation):
-                            latex_eq = latex(equation)
-                            if len(latex2latex(latex_eq)) > 200:
-                                # cách giải cho các bài toán k có rule (done)
-                                if type(latex2sympy(latex_eq)[0]) == type(Eq(x, 1)):
-                                    print(True)
-                                else:
-                                    print(False)
-                                for i in latex2sympy(latex_eq):
-                                    expression = i
-                                    result = expression.rhs.evalf()
-                                    rounded_result = round(result, 4)
-                                    # rounded_expression = Eq(x, rounded_result)
-                                    rounded_vals.append(str(rounded_result))
-                                return rounded_vals
-                            else:
-                                # cách giải cho các bài toán k có rule (done)
-                                return immediately_cal(latex_eq) 
-                        
-                        def quadric_cal(equation):
-                            a = coefficients[0] #6
-                            b = coefficients[1] #13
-                            c = coefficients[2] #3
-                            delta = b**2 - 4*a*c
-                            step.append(f"First, we have to check by calculate: \\(\\Delta = b^{{2}} - 4ac\\) = {delta}")
-                            if delta > 0:
-                                step.append("Because \\(\\Delta > 0 \\), so equation has two solutions, which can be calculated by:")
-                                x1 = (-b + sqrt(delta))/ (2*a)
-                                x2 = (-b - sqrt(delta))/ (2*a)
-                                step.append(f"\\(\\frac{{-b \\pm \\sqrt{{\\Delta}}}}{{2a}}\\)")
-                                step.append(f"Value of \\(x_1 = {latex(x1)}\\) and \\(x_2 = {latex(x2)}\\)")
-                            elif delta == 0:
-                                step.append("Because \\(\\Delta = 0 \\), so equation has one solutions, which can be calculated by:")
-                                x = -b/ (2*a)
-                                step.append(f"\\(\\frac{{-b}}{{2a}}\\)")
-                                step.append(f"Value of \\(x = {latex(x)}\\)")
-                            else:
-                                step.append("Because \\(\\Delta < 0 \\), so the equation has no solution")
-                                step.append("It only has the complex values:")
-                                step.append(f"\\(x = {rounded_cal(equation)} \\)")
-
-                        #update mới nhất
-                        if len(solution) > 200:
-                            return rounded_cal(equation)
-                        # tới đây
-
-                        elif (len(ordered_factors) == 1 and not ordered_factors[0].is_number) or (len(ordered_factors) == 2 and ordered_factors[0].is_number):
-                            if all_degrees == [4, 2, 0] or all_degrees == [4, 2]:
-                                list = []
-                                # cách giải cho bài toán x^4 + x^2 + . . . (bổ sung step cụ thể)
-                                equation_u = expression.subs(x**4, u**2).subs(x**2, u)
-                                step.append("Rewrite the equation \\(u = x^{2}\\) and \\(u^{2} = x^{4}\\)")
-                                solution_step = solve(equation_u)
-                                step.append(f"Solve \\({latex(equation_u)} = 0\\) ")
-                                step.append(f"We have: \\(u = {latex(solution_step)}\\)")
-                                step.append(re_calc(solution_step))
-                                for j in solution_step:
-                                    j = latex(j)
-                                    j = j.replace(" i", "I")
-                                    sol = latex2latex(f"x^2 = {j}")
-                                    list.append(sol)
-                                solution = str(list).replace("'[", "").replace("]'", "").replace("\\\\", "\\")
-                            elif len(all_degrees) !=0 and all_degrees[0] == 2:
-                                step.append(quadric_cal(equation))
-                            else:
-                                # step.append(rounded_cal(equation))
-                                solution = rounded_cal(equation)
-                        elif len(ordered_factors) > 1:
-                            # cách giải cho các bài toán có thể đặt thừa số chung (done)
-                            step.append(f"Transforming the equation, we have, \\({latex(factor(expression))} = 0\\)")
-                            for ftr in ordered_factors:
-                                if not ftr.is_number:
-                                    solution_step = solve(ftr)
-                                    step.append(f"We have \\({latex(ftr)} = 0\\), so x = \\({latex(solution_step)}\\)")
-                                    len_x += len(solution_step)
-                            step.append(f'Therefore, \\({data}\\) has {len_x} values \\({latex(solve(expression))}\\)')
-                        else:
-                            # tính toán thông thường
-                            step.append(factor(expression))
+                    # overwrite solution due to rounded results
+                    solution = handleEquation(step, expr, data, solution)
                 try:
                     return jsonify({'result': solution,'equation': data , 'step': step, 'img': sketchGraph(data, solution)})
                 except Exception as e:
                     print(e)
                     return jsonify({'result': solution,'equation': data , 'step': step})
-                    # return jsonify({'message': 'error'})
 
             except ValueError:
                 return jsonify({'message': "error"})
