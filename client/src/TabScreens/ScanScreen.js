@@ -37,7 +37,10 @@ const ScanScreen = ({ navigation }) => {
       //   { img },
       // );
 
-      const response = await AIScannerApp(img);
+      const response = await AIScannerApp({
+        regenerate_status: null,
+        img: img,
+      });
       console.log(img)
       console.log('#!#!@#!@#!#!#!#!@#!@#!@', response.data.eq);
 
