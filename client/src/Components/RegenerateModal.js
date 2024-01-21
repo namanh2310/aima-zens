@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {Modal, View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import React from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const RegenerateModal = ({visible, toggleModal, children}) => {
+const RegenerateModal = ({ visible, toggleModal, children }) => {
   return (
     <Modal
       animationType="slide"
@@ -20,7 +20,6 @@ const RegenerateModal = ({visible, toggleModal, children}) => {
   );
 };
 
-// Styles for the Modal
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,

@@ -5,51 +5,44 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../Components/Header';
-import {
-  SelectList,
-  MultipleSelectList,
-} from 'react-native-dropdown-select-list';
+import { useState } from 'react';
+import { SelectList } from 'react-native-dropdown-select-list';
 
-const LinearAlgebra = ({navigation}) => {
-  console.log(category);
+import Header from '../../../Components/Header';
+import { linearAlgebra } from '../../../apis/cal.api';
+
+const LinearAlgebra = ({ navigation }) => {
   const categories = [
-    {key: '1', value: 'A + B', disabled: false},
-    {key: '2', value: 'A - B', disabled: false},
-    {key: '3', value: 'A x B', disabled: false},
-    {key: '4', value: 'A ● B', disabled: false},
-    {key: '5', value: 'Convolution', disabled: false},
+    { key: '1', value: 'A + B', disabled: false },
+    { key: '2', value: 'A - B', disabled: false },
+    { key: '3', value: 'A x B', disabled: false },
+    { key: '4', value: 'A ● B', disabled: false },
+    { key: '5', value: 'Convolution', disabled: false },
   ];
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    const getData = async () => {
+
+    await linearAlgebra(input).then((res) => {
       try {
-        await axios
-          .post('http://localhost:8081/Calculus/linearalgebra', {
-            input,
-          }) //For Flask server
-          .then(res => {
-            console.log(res.data);
-            navigation.navigate('Linear Algebra SOL', {
-              data: res.data,
-            });
+        if (res.data.message) {
+          console.error(res.data.message)
+        } else {
+          navigation.navigate('Linear Algebra SOL', {
+            data: res.data,
           });
+        }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
-    };
-    getData();
-    console.log(input);
+    });
   };
   const [input, setInput] = useState();
-  const [result, setResult] = useState(null);
   const [category, setCategory] = useState(null);
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
+
   return (
     <>
       <Header nav={'TMCList'} />
@@ -65,7 +58,6 @@ const LinearAlgebra = ({navigation}) => {
                 placeholder={'1    2    3\n4    5    6\n7    8    9'}
                 onChangeText={text => handleChange('x', JSON.stringify(text))}
                 style={styles.inputField}
-                // defaultValue="1,2,3,4,5,6,7"
               />
             </View>
             <View style={styles.firstValue}>
@@ -75,7 +67,6 @@ const LinearAlgebra = ({navigation}) => {
                 placeholder={'1    2    3\n4    5    6\n7    8    9'}
                 onChangeText={text => handleChange('y', JSON.stringify(text))}
                 style={styles.inputField}
-                // defaultValue="0.5,2.5,2.0,4.0,3.5,6.0,5.5"
               />
             </View>
           </View>
@@ -95,7 +86,7 @@ const LinearAlgebra = ({navigation}) => {
                 color: 'black',
                 fontSize: 22,
               }}>
-              Expected Matrix's Dimension:
+              Output Matrix's Dimension:
             </Text>
             <TextInput
               placeholder="3x3"
@@ -134,13 +125,11 @@ const LinearAlgebra = ({navigation}) => {
               fontSize: 22,
               fontFamily: 'Kanit-Light',
             }}
-            // save="value"
           />
         </View>
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitText}>Calculate</Text>
         </TouchableOpacity>
-        {/* {category && <Text>{category}</Text>} */}
       </View>
     </>
   );

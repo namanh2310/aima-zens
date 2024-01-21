@@ -69,9 +69,6 @@ const ProbaList = ({navigation}) => {
           <ScrollView
             style={styles.scrollViewContent}
             showsVerticalScrollIndicator={false}>
-            {/* <View style={styles.textContainer}>
-          <Text style={styles.titleText}>CALCULUS</Text>
-        </View> */}
             <View style={styles.categoriesContainer}>
               {data.map((el, key) => (
                 <View key={key} style={styles.cateContainer}>
@@ -106,8 +103,6 @@ export default ProbaList;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingLeft: '5%',
-    // paddingRight: '5%',
     backgroundColor: '#8252E7',
   },
   textContainer: {

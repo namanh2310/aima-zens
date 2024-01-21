@@ -5,58 +5,45 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import Syntax from '../../../../Components/Syntax';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Classic4thOrder = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/ODE/fourthOrder', {input}) //For Flask server
-          .then(res => {
-            console.log(res.data);
-            navigation.navigate('Classic Fourth-order Method SOL', {
-              data: res.data.data,
-              h: input.h,
-            });
-            setErrorMessage(null);
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
-  const [input, setInput] = useState({function: '4*exp(0.8x)-0.5y'});
+import Template from '../../../../Components/Template';
+import Syntax from '../../../../Components/Syntax';
+import { fourthOrderMethod } from '../../../../apis/ordinary.api';
+
+const Classic4thOrder = ({ navigation }) => {
+  const [input, setInput] = useState({ function: '4*exp(0.8x)-0.5y' });
   const [result, setResult] = useState('4*exp(0.8x)-0.5y');
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
-  return (
-    // <>
-    //   <Header nav={'TMCList'} />
-    //   <View style={styles.container}>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await fourthOrderMethod(input).then(res => {
+      navigation.navigate('Classic Fourth-order Method SOL', {
+        data: res.data.data,
+        h: input.h,
+      });
+      setErrorMessage(null);
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    });
+  };
 
-    //   </View>
-    // </>
+  return (
     <Template>
       <Text style={styles.title}>CLASSIC 4th-ORDER METHOD</Text>
       <View style={styles.input}>
@@ -72,22 +59,22 @@ const Classic4thOrder = ({navigation}) => {
           <TextInput
             placeholder="xi"
             onChangeText={text => handleChange('xi', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="xf"
             onChangeText={text => handleChange('xf', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="h"
             onChangeText={text => handleChange('h', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="y"
             onChangeText={text => handleChange('y', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
       </View>
@@ -96,7 +83,7 @@ const Classic4thOrder = ({navigation}) => {
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
 
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
       <TouchableOpacity

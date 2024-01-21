@@ -1,8 +1,6 @@
 import {
   View,
   Text,
-  Button,
-  Image,
   TouchableOpacity,
   RefreshControl,
   ScrollView,
@@ -11,12 +9,16 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import ImagePicker from 'react-native-image-crop-picker';
-import axios from 'axios';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faBook, faCamera} from '@fortawesome/free-solid-svg-icons';
-const ScanScreen = ({navigation}) => {
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faBook, faCamera } from '@fortawesome/free-solid-svg-icons';
+
+import { AIScannerApp } from '../apis/ai.api';
+import { fundamentalCaluclus } from '../apis/cal.api';
+import { URL_BACKGROUND, URL_UPLOAD_CLOUDINARY } from '../constants/api.const';
+
+const ScanScreen = ({ navigation }) => {
   const [img, setImg] = useState();
   const [status, setStatus] = useState(null);
   const [test, setTest] = useState();
@@ -24,26 +26,31 @@ const ScanScreen = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const specialAlgorithm = (algorithm, funct, type) => {
-    navigation.navigate(algorithm, {function: funct, type: type});
+    navigation.navigate(algorithm, { function: funct, type: type });
   };
 
   const handleSubmit = async data => {
     try {
       setIsLoading(true);
-      // console.log(';al;alalala,', img);
-      const response = await axios.post(
-        'http://localhost:8081/AIScanner/AIforApp', //here
-        {img},
-      ); // For Flask server
+      // const response = await axios.post(
+      //   'http://localhost:8081/AIScanner/AIforApp',
+      //   { img },
+      // );
+
+      const response = await AIScannerApp(img);
+      console.log(img)
       console.log('#!#!@#!@#!#!#!#!@#!@#!@', response.data.eq);
+
+      // Perform computation using data
       const data = response.data.eq;
       const complex = response.data.complex;
-      // Perform computation using data
       if (!complex) {
-        const computationResponse = await axios.post(
-          'http://localhost:8081/Calculus/fundamental', //here
-          {data},
-        );
+        // const computationResponse = await axios.post(
+        //   'http://localhost:8081/Calculus/fundamental',
+        //   { data },
+        // );
+
+        const computationResponse = await fundamentalCaluclus(data);
 
         navigation.navigate('Fundamental SOL', {
           scanImg: img,
@@ -64,6 +71,7 @@ const ScanScreen = ({navigation}) => {
       setIsLoading(false);
     }
   };
+
   const upload = () => {
     ImagePicker.openPicker({
       width: 0,
@@ -72,21 +80,22 @@ const ScanScreen = ({navigation}) => {
       freeStyleCropEnabled: true,
       includeBase64: true,
     }).then(image => {
-      setImg(`data:${image.mime};base64,${image.data}`);
+      // setImg(`data:${image.mime};base64,${image.data}`);
       const uri = image.path;
       const type = 'image/png';
       const name = 'image';
-      const source = {uri, type, name};
+      const source = { uri, type, name };
       handleUpload(source);
     });
   };
+
   const handleUpload = image => {
     const data = new FormData();
     console.log(data);
     data.append('file', image);
     data.append('upload_preset', 'thesisapp');
     data.append('cloud_name', 'dktopqn1g');
-    fetch('https://api.cloudinary.com/v1_1/dktopqn1g/image/upload', {
+    fetch(URL_UPLOAD_CLOUDINARY, {
       method: 'post',
       body: data,
       headers: {
@@ -113,7 +122,7 @@ const ScanScreen = ({navigation}) => {
       const uri = image.path;
       const type = 'image/png';
       const name = 'image';
-      const source = {uri, type, name};
+      const source = { uri, type, name };
       handleUpload(source);
     });
   };
@@ -136,13 +145,12 @@ const ScanScreen = ({navigation}) => {
   return (
     <ImageBackground
       source={{
-        uri: 'https://img.freepik.com/premium-vector/mathematics-seamless-pattern-math-background_8071-25010.jpg',
-      }} // Replace with your image URL
+        uri: URL_BACKGROUND,
+      }}
       style={styles.backgroundImage}>
       <View style={styles.container}>
         {isLoading && (
           <View style={styles.loadingContainer}>
-            {/* <Text style={styles.loadingText}>Loading . . .</Text> */}
             <ActivityIndicator size="large" color="white" />
           </View>
         )}
@@ -181,7 +189,7 @@ const ScanScreen = ({navigation}) => {
           <View style={styles.switchContainer}>
             <Text style={styles.switchText}>Enable Crop:</Text>
             <Switch
-              trackColor={{false: '#fff', true: '#4BB543'}}
+              trackColor={{ false: '#fff', true: '#4BB543' }}
               thumbColor={isCrop ? '#fff' : '#c8c8c8'}
               value={isCrop}
               onValueChange={value => setIsCrop(value)}
@@ -285,7 +293,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  submitText: {fontFamily: 'Kanit-Medium', fontSize: 22, color: '#fff'},
+  submitText: { fontFamily: 'Kanit-Medium', fontSize: 22, color: '#fff' },
   switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',

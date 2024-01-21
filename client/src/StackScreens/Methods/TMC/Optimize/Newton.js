@@ -5,69 +5,57 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import {useRoute} from '@react-navigation/native';
-import Header from '../../../../Components/Header';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
-import Syntax from '../../../../Components/Syntax';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Newton = ({navigation}) => {
+import Template from '../../../../Components/Template';
+import { newtonRaphsonMethod } from '../../../../apis/optimize.api';
+
+const Newton = ({ navigation }) => {
   const route = useRoute();
   const header = route.params.header;
   const fields = route.params.fields;
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/Optimize/newtonmethod', {
-            input,
-          }) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Newton Method SOL', {
-                data: res.data.data,
-                function: res.data.formula,
-                firstDeri: res.data.firtDeri,
-                secondDeri: res.data.secondDeri,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
   const [input, setInput] = useState({
     function: 'x^5 - 5x^4 + x^3- 6x^2+7x+10',
   });
   const [result, setResult] = useState('x^5 - 5x^4 + x^3- 6x^2+7x+10');
   const [errorMessage, setErrorMessage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
+
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
-  return (
-    // <>
-    //   <Header nav={'TMCList'} />
-    //   <View style={styles.container}>
 
-    //   </View>
-    // </>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await newtonRaphsonMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Newton Method SOL', {
+          data: res.data.data,
+          function: res.data.formula,
+          firstDeri: res.data.firtDeri,
+          secondDeri: res.data.secondDeri,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    })
+  };
+
+  return (
     <Template>
       <Text style={styles.title}>NEWTON METHOD</Text>
       <View style={styles.input}>
@@ -83,13 +71,13 @@ const Newton = ({navigation}) => {
           <TextInput
             placeholder="x0"
             onChangeText={text => handleChange('x0', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
 
           <TextInput
             placeholder="error"
             onChangeText={text => handleChange('es', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
       </View>
@@ -99,7 +87,7 @@ const Newton = ({navigation}) => {
       </TouchableOpacity>
 
       {/* <Text>{result && JSON.stringify(result)}</Text> */}
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
       <TouchableOpacity

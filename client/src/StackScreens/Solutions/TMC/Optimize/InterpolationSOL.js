@@ -5,10 +5,11 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import MathView, {MathText} from 'react-native-math-view';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { MathText } from 'react-native-math-view';
+import { Table, Row } from 'react-native-table-component';
+
 import Header from '../../../../Components/Header';
 
 const InterpolationSOL = () => {
@@ -52,7 +53,7 @@ const InterpolationSOL = () => {
         {table === 1 ? (
           <ScrollView style={styles.tabField} horizontal={true}>
             <View>
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+              <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                 <Row
                   data={tableHead}
                   widthArr={widthArr}
@@ -61,7 +62,7 @@ const InterpolationSOL = () => {
                 />
               </Table>
               <ScrollView style={styles.dataWrapper}>
-                <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                   {tableDataFirst.map((rowData, index) => (
                     <Row
                       key={index}
@@ -69,7 +70,7 @@ const InterpolationSOL = () => {
                       widthArr={widthArr}
                       style={[
                         styles.row,
-                        index % 2 && {backgroundColor: '#F7F6E7'},
+                        index % 2 && { backgroundColor: '#F7F6E7' },
                       ]}
                       textStyle={styles.text}
                     />
@@ -81,7 +82,7 @@ const InterpolationSOL = () => {
         ) : (
           <ScrollView style={styles.tabField} horizontal={true}>
             <View>
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+              <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                 <Row
                   data={tableHead}
                   widthArr={widthArr}
@@ -90,7 +91,7 @@ const InterpolationSOL = () => {
                 />
               </Table>
               <ScrollView style={styles.dataWrapper}>
-                <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                   {tableDataSecond.map((rowData, index) => (
                     <Row
                       key={index}
@@ -98,7 +99,7 @@ const InterpolationSOL = () => {
                       widthArr={widthArr}
                       style={[
                         styles.row,
-                        index % 2 && {backgroundColor: '#F7F6E7'},
+                        index % 2 && { backgroundColor: '#F7F6E7' },
                       ]}
                       textStyle={styles.text}
                     />

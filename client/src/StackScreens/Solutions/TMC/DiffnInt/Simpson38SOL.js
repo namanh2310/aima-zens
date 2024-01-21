@@ -5,13 +5,12 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { MathText } from 'react-native-math-view';
 import Header from '../../../../Components/Header';
 
-const Simpson38SOL = ({navigation}) => {
+const Simpson38SOL = ({ navigation }) => {
   const route = useRoute();
   const data = route.params.data;
   const result = data.data[0];
@@ -21,10 +20,6 @@ const Simpson38SOL = ({navigation}) => {
   const a = data.a;
   const b = data.b;
   const intFunct = data.intFunct;
-  // const intFunct = route.params.intFunct;
-  // const n = route.params.n;
-  // const a = route.params.a;
-  // const b = route.params.b;
   const [step, setStep] = useState(false);
 
   return (

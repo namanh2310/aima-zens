@@ -5,13 +5,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { Table, Row } from 'react-native-table-component';
+import MathView from 'react-native-math-view';
 import Header from '../../../../Components/Header';
 
-const RalstonMethodSOL = ({navigation}) => {
+const RalstonMethodSOL = ({ navigation }) => {
   const route = useRoute();
   const data = route.params.data;
   const h = route.params.h;
@@ -32,7 +32,7 @@ const RalstonMethodSOL = ({navigation}) => {
         <Text style={styles.title}>Result!!</Text>
         <ScrollView style={styles.tabField} horizontal={true}>
           <View>
-            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
               <Row
                 data={tableHead}
                 widthArr={widthArr}
@@ -41,7 +41,7 @@ const RalstonMethodSOL = ({navigation}) => {
               />
             </Table>
             <ScrollView style={styles.dataWrapper}>
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+              <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                 {tableData.map((rowData, index) => (
                   <Row
                     key={index}
@@ -49,7 +49,7 @@ const RalstonMethodSOL = ({navigation}) => {
                     widthArr={widthArr}
                     style={[
                       styles.row,
-                      index % 2 && {backgroundColor: '#F7F6E7'},
+                      index % 2 && { backgroundColor: '#F7F6E7' },
                     ]}
                     textStyle={styles.text}
                   />
@@ -70,13 +70,13 @@ const RalstonMethodSOL = ({navigation}) => {
                   STEP 1: Calculate the first k1 and k2:
                 </Text>
                 <MathView
-                  config={{ex: 15}}
+                  config={{ ex: 15 }}
                   resizeMode="cover"
                   math={`k_{1} = f(x_{1}, y_{1}) = f(${data[0].x}, ${data[0].y_ralston})= ${data[0].slope} `}
                   style={styles.size_small}
                 />
                 <MathView
-                  config={{ex: 15}}
+                  config={{ ex: 15 }}
                   resizeMode="cover"
                   math={`k_{2} = f(x_{1}+\\frac{3h}{4}, y_{1}+\\frac{3h}{4}k_{1})=${data[0].slope2} `}
                   style={styles.size_small}
@@ -88,19 +88,19 @@ const RalstonMethodSOL = ({navigation}) => {
                   STEP 2: Calculate y value of the next iteration:
                 </Text>
                 <MathView
-                  config={{ex: 15}}
+                  config={{ ex: 15 }}
                   resizeMode="cover"
                   math={`y_{2} = y_{1} + (\\frac{1}{3}k_{1}+\\frac{2}{3}k_{2})h`}
                   style={styles.size_large}
                 />
                 <MathView
-                  config={{ex: 15}}
+                  config={{ ex: 15 }}
                   resizeMode="cover"
                   math={`= ${data[0].y_ralston}+(\\frac{1}{3}.${data[0].slope} + \\frac{2}{3}.${data[0].slope2})*${h}`}
                   style={styles.size_small}
                 />
                 <MathView
-                  config={{ex: 15}}
+                  config={{ ex: 15 }}
                   resizeMode="cover"
                   math={`Therefore: y_{2} = ${data[1].y_ralston}`}
                   style={styles.size_larger}

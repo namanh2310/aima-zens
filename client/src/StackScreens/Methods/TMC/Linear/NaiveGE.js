@@ -5,52 +5,42 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
 
-const NaiveGE = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/Linear/naivege', {input}) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Naive Gauss Elimination SOL', {
-                data: res.data,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
+import Template from '../../../../Components/Template';
+import { naivegeGEMethod } from '../../../../apis/linearEq.api';
+
+const NaiveGE = ({ navigation }) => {
   const [input, setInput] = useState();
   const [result, setResult] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+
   const handleChange = text => {
     setInput(JSON.stringify(text));
   };
-  return (
-    // <>
-    //   <Header />
-    //   <View style={styles.container}>
 
-    //   </View>
-    // </>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await naivegeGEMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Naive Gauss Elimination SOL', {
+          data: res.data,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    });
+  };
+
+  return (
     <Template>
       <Text style={styles.title}>NAIVE GAUSS ELIMINATION CALCULATOR</Text>
       <View style={styles.input}>
@@ -74,7 +64,7 @@ const NaiveGE = ({navigation}) => {
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
       {/* {result && <Text>{JSON.stringify(result)}</Text>} */}
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
     </Template>

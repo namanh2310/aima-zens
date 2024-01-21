@@ -5,13 +5,14 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { Table, Row } from 'react-native-table-component';
+import MathView from 'react-native-math-view';
+
 import Header from '../../../../Components/Header';
 
-const GoldenSectionSOL = ({navigation}) => {
+const GoldenSectionSOL = ({ navigation }) => {
   const route = useRoute();
   const data = route.params.data;
   const [step, setStep] = useState(false);
@@ -39,7 +40,7 @@ const GoldenSectionSOL = ({navigation}) => {
         <Text style={styles.title}>RESULT!</Text>
         <ScrollView style={styles.tabField} horizontal={true}>
           <View>
-            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
               <Row
                 data={tableHead}
                 widthArr={widthArr}
@@ -48,7 +49,7 @@ const GoldenSectionSOL = ({navigation}) => {
               />
             </Table>
             <ScrollView style={styles.dataWrapper}>
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+              <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                 {tableData.map((rowData, index) => (
                   <Row
                     key={index}
@@ -56,7 +57,7 @@ const GoldenSectionSOL = ({navigation}) => {
                     widthArr={widthArr}
                     style={[
                       styles.row,
-                      index % 2 && {backgroundColor: '#F7F6E7'},
+                      index % 2 && { backgroundColor: '#F7F6E7' },
                     ]}
                     textStyle={styles.text}
                   />
@@ -113,9 +114,8 @@ const GoldenSectionSOL = ({navigation}) => {
                 />
                 <MathView
                   resizeMode="cover"
-                  math={`= (1 - \\frac{\\sqrt{5} - 1}{2})\\frac{${
-                    data[0].xu - data[0].xl
-                  }}{ ${data[0].x2}}*100=${data[0].ea}`}
+                  math={`= (1 - \\frac{\\sqrt{5} - 1}{2})\\frac{${data[0].xu - data[0].xl
+                    }}{ ${data[0].x2}}*100=${data[0].ea}`}
                   style={styles.size_medium}
                 />
               </View>

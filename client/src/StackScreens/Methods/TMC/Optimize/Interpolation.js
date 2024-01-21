@@ -5,43 +5,14 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
-import Syntax from '../../../../Components/Syntax';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Parabolic = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/Optimize/interpolation', {
-            input,
-          }) //here
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Parabolic Interpolation SOL', {
-                data: res.data,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
+import Template from '../../../../Components/Template';
+import { interpolationMethod } from '../../../../apis/optimize.api';
+
+const Interpolation = ({ navigation }) => {
   const [input, setInput] = useState({
     function: 'x^5 - 5x^4 + x^3- 6x^2+7x+10',
   });
@@ -49,21 +20,36 @@ const Parabolic = ({navigation}) => {
   const [result, setResult] = useState('x^5 - 5x^4 + x^3- 6x^2+7x+10');
   const [errorMessage, setErrorMessage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
+
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await interpolationMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Parabolic Interpolation SOL', {
+          data: res.data,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    });
+  };
+
   return (
-    // <>
-    //   <Header nav={'TMCList'} />
-
-    //   <View style={styles.container}>
-
-    //   </View>
-    // </>
     <Template>
       <Text style={styles.title}>PARABOLIC INTERPOLATION</Text>
       <View style={styles.input}>
@@ -79,29 +65,29 @@ const Parabolic = ({navigation}) => {
           <TextInput
             placeholder="x0"
             onChangeText={text => handleChange('x0', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="x1"
             onChangeText={text => handleChange('x1', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="x2"
             onChangeText={text => handleChange('x2', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="es"
             onChangeText={text => handleChange('es', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
         <View style={styles.typeFields}>
           <TouchableOpacity
             style={
               type === 'Maximum'
-                ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+                ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
                 : styles.type
             }
             onPress={() => {
@@ -113,7 +99,7 @@ const Parabolic = ({navigation}) => {
           <TouchableOpacity
             style={
               type === 'Minimum'
-                ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+                ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
                 : styles.type
             }
             onPress={() => {
@@ -128,7 +114,7 @@ const Parabolic = ({navigation}) => {
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
       <TouchableOpacity
@@ -208,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Parabolic;
+export default Interpolation;

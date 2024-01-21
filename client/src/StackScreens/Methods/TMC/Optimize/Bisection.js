@@ -5,39 +5,15 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+
 import Syntax from '../../../../Components/Syntax';
 import Template from '../../../../Components/Template';
+import { biSectionMethod } from '../../../../apis/optimize.api';
 
-const Bisection = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/Optimize/bisection', {input}) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Bisection SOL', {data: res.data});
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
+const Bisection = ({ navigation }) => {
   const [input, setInput] = useState({
     function: '(667.38/x) * (1 - exp(-0.146843x))-40',
   });
@@ -46,21 +22,32 @@ const Bisection = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await biSectionMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Bisection SOL', { data: res.data });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    });
+  };
+
   return (
-    // <>
-    //   <Header nav={'TMCList'} />
-
-    //   <View style={styles.container}>
-
-    //   </View>
-    // </>
     <Template>
       <Text style={styles.title}>BISECTION SEARCH</Text>
       <View style={styles.input}>
@@ -76,17 +63,17 @@ const Bisection = ({navigation}) => {
           <TextInput
             placeholder="xl"
             onChangeText={text => handleChange('xl', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="xu"
             onChangeText={text => handleChange('xu', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="error"
             onChangeText={text => handleChange('es', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
       </View>
@@ -94,7 +81,7 @@ const Bisection = ({navigation}) => {
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
 

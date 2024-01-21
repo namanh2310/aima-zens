@@ -5,13 +5,14 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { Table, Row } from 'react-native-table-component';
+import MathView from 'react-native-math-view';
+
 import Header from '../../../../Components/Header';
 
-const NewtonMethodSOL = ({navigation}) => {
+const NewtonMethodSOL = ({ navigation }) => {
   const route = useRoute();
   const data = route.params.data;
   const funct = route.params.function.replace(/\*/g, '');
@@ -32,7 +33,7 @@ const NewtonMethodSOL = ({navigation}) => {
         <Text style={styles.title}>RESULT!</Text>
         <ScrollView style={styles.tabField} horizontal={true}>
           <View style={styles}>
-            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
               <Row
                 data={tableHead}
                 widthArr={widthArr}
@@ -41,7 +42,7 @@ const NewtonMethodSOL = ({navigation}) => {
               />
             </Table>
             <ScrollView style={styles.dataWrapper}>
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+              <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                 {tableData.map((rowData, index) => (
                   <Row
                     key={index}
@@ -49,7 +50,7 @@ const NewtonMethodSOL = ({navigation}) => {
                     widthArr={widthArr}
                     style={[
                       styles.row,
-                      index % 2 && {backgroundColor: '#F7F6E7'},
+                      index % 2 && { backgroundColor: '#F7F6E7' },
                     ]}
                     textStyle={styles.text}
                   />

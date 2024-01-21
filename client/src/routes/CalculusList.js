@@ -5,30 +5,24 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 import React from 'react';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {
-  faCalculator,
-  faTableCells,
-  faPlay,
-} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import Header from '../Components/Header';
 
-const CalculusList = ({navigation}) => {
+const CalculusList = ({ navigation }) => {
   const data = [
     {
       cateName: 'Basic calculus',
       navLink: 'Fundamental',
-      // icon: require('../../assets/image/calSymbol.png'),
     },
     {
       cateName: 'Linear Algebra',
       navLink: 'Linear Algebra',
-      // icon: require('../../assets/image/matrixSymbol.png'),
     },
   ];
+  
   return (
     <>
       <Header nav={'TabNavigator'} />
@@ -52,13 +46,6 @@ const CalculusList = ({navigation}) => {
                   })
                 }>
                 <View style={styles.left}>
-                  {/* <FontAwesomeIcon
-                  style={styles.categoryIcon}
-                  icon={el.icon}
-                  size={40}
-                  color={'#1c2e4d'}
-                /> */}
-                  {/* <Image style={styles.imgSymbol} source={el.icon} /> */}
                   <Text style={styles.categoryName}>{el.cateName}</Text>
                 </View>
                 <FontAwesomeIcon

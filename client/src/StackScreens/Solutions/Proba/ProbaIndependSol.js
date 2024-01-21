@@ -1,15 +1,11 @@
+import React from 'react';
+import { useRoute } from '@react-navigation/native';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
-  ScrollView,
   FlatList,
-  Animated,
 } from 'react-native';
-import React from 'react';
-import {useRoute} from '@react-navigation/native';
-
 import {
   Table,
   TableWrapper,
@@ -17,6 +13,7 @@ import {
   Rows,
   Col,
 } from 'react-native-table-component';
+
 import Header from '../../../Components/Header';
 
 const ProbaIndendSOL = () => {
@@ -26,7 +23,6 @@ const ProbaIndendSOL = () => {
   const pB = route.params.pB;
   const timeA = route.params.timeA;
   const timeB = route.params.timeB;
-  console.log(pA, pB);
 
   const steps = [
     {
@@ -128,7 +124,7 @@ const ProbaIndendSOL = () => {
 
   const tableData = Object.values(data).map(value => [value]);
 
-  const Item = ({step, name, result, formula, picture}) => (
+  const Item = ({ step, name, result, formula, picture }) => (
     <View style={styles.item}>
       <Text style={styles.stepTitle}>
         {step}. {name}
@@ -148,7 +144,7 @@ const ProbaIndendSOL = () => {
       <Header />
       <View style={styles.container}>
         <Text style={styles.headerTitle}>Solution</Text>
-        <Table borderStyle={{borderWidth: 1}}>
+        <Table borderStyle={{ borderWidth: 1 }}>
           <Row
             data={tableHead}
             flexArr={[1, 1.2]}
@@ -173,7 +169,7 @@ const ProbaIndendSOL = () => {
         <View style={styles.stepField}>
           <FlatList
             data={steps}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <Item
                 step={item.step}
                 name={item.name}
@@ -193,12 +189,12 @@ const ProbaIndendSOL = () => {
 export default ProbaIndendSOL;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, backgroundColor: '#fff'},
-  head: {height: 40, backgroundColor: '#b8b8b8'},
-  wrapper: {flexDirection: 'row', backgroundColor: '#d8d8d8'},
-  title: {flex: 1, backgroundColor: '#f6f8fa'},
-  row: {height: 26},
-  text: {textAlign: 'center', fontSize: 16},
+  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  head: { height: 40, backgroundColor: '#b8b8b8' },
+  wrapper: { flexDirection: 'row', backgroundColor: '#d8d8d8' },
+  title: { flex: 1, backgroundColor: '#f6f8fa' },
+  row: { height: 26 },
+  text: { textAlign: 'center', fontSize: 16 },
   headerTitle: {
     fontFamily: 'Candal-Regular',
     fontSize: 28,

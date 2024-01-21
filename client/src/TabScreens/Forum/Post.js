@@ -22,7 +22,7 @@ import {
 } from '../../Redux/actions';
 import PostOptions from '../../Components/PostOptions';
 import PostModal from '../../Components/PostModal';
-import {addVote} from '../../Api';
+import {addVote} from '../../apis';
 
 const Post = ({navigation}) => {
   const dispatch = useDispatch();

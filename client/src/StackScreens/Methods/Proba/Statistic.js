@@ -5,53 +5,44 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Template from '../../../Components/Template';
+import { statisticMethod } from '../../../apis/proba.api';
 
-const Statistic = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/Probability/statistic', {
-            input,
-          }) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Statistic Calculator SOL', {
-                data: res.data,
-                input: input,
-                sum: input.join(',').replace(/,/g, '+'),
-                product: input.join(',').replace(/,/g, '*'),
-                productRes: eval(input.join(',').replace(/,/g, '*')),
-              });
-              if (error.response.status === 500) {
-                setErrorMessage('Please re-check the input fields');
-              } else if (error.response.status === 404) {
-                setErrorMessage('Your are disconnecting with network!');
-              }
-            }
-          });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getData();
-    console.log(eval(input.join(',').replace(/,/g, '*')));
-  };
+const Statistic = ({ navigation }) => {
   const [input, setInput] = useState();
   const [result, setResult] = useState(null);
+
   const handleChange = text => {
     setInput(text.split(',').map(parseFloat));
   };
-  return (
-    // <View style={styles.container}>
 
-    // </View>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await statisticMethod(input).then((res) => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Statistic Calculator SOL', {
+          data: res.data,
+          input: input,
+          sum: input.join(',').replace(/,/g, '+'),
+          product: input.join(',').replace(/,/g, '*'),
+          productRes: eval(input.join(',').replace(/,/g, '*')),
+        });
+        if (error.response.status === 500) {
+          setErrorMessage('Please re-check the input fields');
+        } else if (error.response.status === 404) {
+          setErrorMessage('Your are disconnecting with network!');
+        }
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  };
+
+  return (
     <Template>
       <Text style={styles.title}>STATISTIC CALCULATOR</Text>
       <View style={styles.input}>

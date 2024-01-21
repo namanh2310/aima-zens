@@ -1,16 +1,12 @@
+import React from 'react';
+import {useRoute} from '@react-navigation/native';
+import MathView from 'react-native-math-view';
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
-  FlatList,
-  Animated,
 } from 'react-native';
-import React from 'react';
-import {useRoute} from '@react-navigation/native';
-import MathView from 'react-native-math-view';
-
 import {
   Table,
   TableWrapper,
@@ -18,6 +14,7 @@ import {
   Rows,
   Col,
 } from 'react-native-table-component';
+
 import Header from '../../../Components/Header';
 
 const ConIntervalSOL = () => {
@@ -54,7 +51,6 @@ const ConIntervalSOL = () => {
     ['3.891'],
     ['4.417'],
   ];
-  //   const tableData = Object.values(data).map(value => [value]);
 
   return (
     <>

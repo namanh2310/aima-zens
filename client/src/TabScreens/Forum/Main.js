@@ -34,7 +34,7 @@ import {
 } from 'react-native-dropdown-select-list';
 import {color} from 'react-native-reanimated';
 import PostModal from '../../Components/PostModal';
-import {addVote} from '../../Api';
+import {addVote} from '../../apis';
 
 const categories = [
   {key: '1', value: 'All fields', disabled: false},

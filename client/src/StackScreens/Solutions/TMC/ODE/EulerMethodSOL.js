@@ -7,8 +7,9 @@ import {
 } from 'react-native';
 import {useState} from 'react';
 import {useRoute} from '@react-navigation/native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-import MathView, {MathText} from 'react-native-math-view';
+import {Table, Row} from 'react-native-table-component';
+import MathView from 'react-native-math-view';
+
 import Header from '../../../../Components/Header';
 
 const EulerMethodSOL = ({navigation}) => {

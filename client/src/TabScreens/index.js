@@ -17,7 +17,7 @@ import EnterEmailForgotPW from '../StackScreens/EnterEmailForgotPW';
 import Notification from './Notification';
 
 //Calculus
-import CalculusList from '../StackScreens/CalculusList';
+import CalculusList from '../routes/CalculusList';
 import Fundamental from '../StackScreens/Methods/Calculus/Fundamental';
 import FundamentalSol from '../StackScreens/Solutions/Calculus/FundamentalSOL';
 //====
@@ -32,7 +32,7 @@ import GeometricSOL from '../StackScreens/Solutions/Geometric/GeometricSOL';
 import GoldenSection from '../StackScreens/Methods/TMC/Optimize/GoldenSection';
 import GoldenSectionSOL from '../StackScreens/Solutions/TMC/Optimize/GoldenSectionSOL';
 import Newton from '../StackScreens/Methods/TMC/Optimize/Newton';
-import Parabolic from '../StackScreens/Methods/TMC/Optimize/Parabolic';
+import Parabolic from '../StackScreens/Methods/TMC/Optimize/Interpolation';
 import NewtonMethodSOL from '../StackScreens/Solutions/TMC/Optimize/NewtonMethodSOL';
 import EulerMethod from '../StackScreens/Methods/TMC/ODE/EulerMethod';
 import EulerMethodSOL from '../StackScreens/Solutions/TMC/ODE/EulerMethodSOL';
@@ -137,13 +137,12 @@ const NavigatorScreen = () => {
         <Stack.Screen name="TMCList" component={TMCList} />
         <Stack.Screen name="Method List" component={MethodList} />
         {/* TMC - OPTIMIZE */}
-
         <Stack.Screen name="Golden Section" component={GoldenSection} />
         <Stack.Screen name="Golden Section SOL" component={GoldenSectionSOL} />
-
+        {/* ===== */}
         <Stack.Screen name="Newton Method" component={Newton} />
         <Stack.Screen name="Newton Method SOL" component={NewtonMethodSOL} />
-
+        {/* ===== */}
         <Stack.Screen name="Bisection Method" component={Bisection} />
         <Stack.Screen name="Bisection SOL" component={BisectionSOL} />
         <Stack.Screen name="Parabolic Interpolation" component={Parabolic} />
@@ -196,12 +195,11 @@ const NavigatorScreen = () => {
         <Stack.Screen name="Trapezoidal Rule SOL" component={TrapezoidalSOL} />
         {/* ===== */}
         <Stack.Screen name="Trapezoidal MA Rule" component={TrapezoidalMA} />
-
         <Stack.Screen
           name="TrapezoidalMA Rule SOL"
           component={TrapezoidalmaSOL}
         />
-
+        {/* ===== */}
         <Stack.Screen name="Simpson 1/3 Rule" component={Simpson13Rule} />
         <Stack.Screen
           name="Simpson 1/3 Rule SOL"
@@ -221,13 +219,11 @@ const NavigatorScreen = () => {
         <Stack.Screen name="Linear Regression" component={LRegression} />
         <Stack.Screen name="Linear Regression SOL" component={LRegressionSOL} />
         {/* ===== */}
-
         <Stack.Screen name="2nd-order Regression" component={SecOrderLR} />
         <Stack.Screen
           name="2nd-order Regression SOL"
           component={SecOrderLRSOL}
         />
-
         {/* ===== */}
         <Stack.Screen name="Multi-order Regression" component={MulOrderLR} />
         <Stack.Screen
@@ -236,7 +232,6 @@ const NavigatorScreen = () => {
         />
 
         {/* Probaaa */}
-
         <Stack.Screen name="ProbaList" component={ProbaList} />
         {/* ===== */}
         <Stack.Screen name="Probability Calculator" component={ProbaCal} />
@@ -253,27 +248,22 @@ const NavigatorScreen = () => {
         {/* ===== */}
         <Stack.Screen name="Normal Distribution" component={NormalDis} />
         <Stack.Screen name="Normal Distribution SOL" component={NormalDisSOL} />
-
         {/* ===== */}
-
         <Stack.Screen name="Statistic Calculator" component={Statistic} />
         <Stack.Screen
           name="Statistic Calculator SOL"
           component={StatisticSOL}
         />
         {/* ===== */}
-
+        <Stack.Screen name="Sample Size" component={SampleSize} />
+        <Stack.Screen name="Sample Size SOL" component={SampleSizeSOL} />
+        {/* ===== */}
         <Stack.Screen name="Confidence Interval" component={ConInterval} />
         <Stack.Screen
           name="Confidence Interval SOL"
           component={ConIntervalSOL}
         />
         {/* ===== */}
-
-        <Stack.Screen name="Sample Size" component={SampleSize} />
-        <Stack.Screen name="Sample Size SOL" component={SampleSizeSOL} />
-        {/* ===== */}
-
         <Stack.Screen name="Z-score" component={ZScore} />
         <Stack.Screen name="Z-score SOL" component={ZscoreSOL} />
       </Stack.Navigator>

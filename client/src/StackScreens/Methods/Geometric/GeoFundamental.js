@@ -5,18 +5,18 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  Button,
   KeyboardAvoidingView,
 } from 'react-native';
-import React, {useState, useCallback} from 'react';
-import axios from 'axios';
-import MathView, {MathText} from 'react-native-math-view';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faSquareCheck} from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from 'react';
+import MathView from 'react-native-math-view';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faSquareCheck } from '@fortawesome/free-solid-svg-icons';
+import { useSelector } from 'react-redux';
+
+import { RECTANGLE, SQUARE, TRIANGLE } from '../../../Image';
 import Header from '../../../Components/Header';
-import {useSelector, useDispatch} from 'react-redux';
-import {auth$} from '../../../Redux/selectors';
-import {RECTANGLE, SQUARE, TRIANGLE} from '../../../Image';
+import { auth$ } from '../../../Redux/selectors';
+import { geometricFunction } from '../../../apis/geo.api';
 
 const data = [
   {
@@ -79,15 +79,13 @@ const data = [
     nav: 'triangle',
     length: 4,
     math: input =>
-      `a = ${input[0]}, b = ${input[1] !== undefined ? input[1] : ''}, c = ${
-        input[2] !== undefined ? input[2] : ''
+      `a = ${input[0]}, b = ${input[1] !== undefined ? input[1] : ''}, c = ${input[2] !== undefined ? input[2] : ''
       }, h = ${input[3] !== undefined ? input[3] : ''}  `,
   },
 ];
 
-const GeoFundamental = ({navigation}) => {
+const GeoFundamental = ({ navigation }) => {
   const auth = useSelector(auth$);
-  const [result, setResult] = useState();
   const [check, setCheck] = useState(false);
   const [input, setInput] = useState({});
   const [type, setType] = useState(null);
@@ -131,7 +129,7 @@ const GeoFundamental = ({navigation}) => {
         <TouchableOpacity
           style={
             type === 'Area'
-              ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+              ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
               : styles.type
           }
           onPress={() => {
@@ -143,7 +141,7 @@ const GeoFundamental = ({navigation}) => {
         <TouchableOpacity
           style={
             type === 'Perimeter'
-              ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+              ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
               : styles.type
           }
           onPress={() => {
@@ -155,7 +153,7 @@ const GeoFundamental = ({navigation}) => {
         <TouchableOpacity
           style={
             type === 'Volume'
-              ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+              ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
               : styles.type
           }
           onPress={() => {
@@ -167,7 +165,7 @@ const GeoFundamental = ({navigation}) => {
         <TouchableOpacity
           style={
             type === 'Surface area'
-              ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+              ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
               : styles.type
           }
           onPress={() => {
@@ -181,7 +179,7 @@ const GeoFundamental = ({navigation}) => {
         <TouchableOpacity
           style={
             geometric === 'square'
-              ? {borderWidth: 3, borderColor: '#205cc9', ...styles.geoButton}
+              ? { borderWidth: 3, borderColor: '#205cc9', ...styles.geoButton }
               : styles.geoButton
           }
           onPress={() => setGeometric('square')}>
@@ -190,7 +188,7 @@ const GeoFundamental = ({navigation}) => {
         <TouchableOpacity
           style={
             geometric === 'rectangle'
-              ? {borderWidth: 3, borderColor: '#205cc9', ...styles.geoButton}
+              ? { borderWidth: 3, borderColor: '#205cc9', ...styles.geoButton }
               : styles.geoButton
           }
           onPress={() => setGeometric('rectangle')}>
@@ -199,7 +197,7 @@ const GeoFundamental = ({navigation}) => {
         <TouchableOpacity
           style={
             geometric === 'triangle'
-              ? {borderWidth: 3, borderColor: '#205cc9', ...styles.geoButton}
+              ? { borderWidth: 3, borderColor: '#205cc9', ...styles.geoButton }
               : styles.geoButton
           }
           onPress={() => setGeometric('triangle')}>
@@ -211,36 +209,29 @@ const GeoFundamental = ({navigation}) => {
         onPress={e => handleSubmit(el.nav, el.geoType, e)}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      {/* <Text>{input && JSON.stringify(input)}</Text>
-        <Text>{result && JSON.stringify(result)}</Text> */}
     </View>
   ));
 
-  const handleSubmit = (nav, geoType, e) => {
+  const handleSubmit = async (nav, geoType, e) => {
     e.preventDefault();
-    const getData = async () => {
+
+    await geometricFunction(nav, input).then(res => {
       try {
-        await axios
-          .post(`http://localhost:8081/Geometric/${nav}`, {input}) //For Flask server
-          .then(res => {
-            // setResult(res.data);
-            console.log(res.data.result);
-            navigation.navigate('GeoFundamentalSOL', {
-              data: res.data,
-              shape: nav,
-              type: geoType,
-            });
-          });
+        navigation.navigate('GeoFundamentalSOL', {
+          data: res.data,
+          shape: nav,
+          type: geoType,
+        });
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
-    };
-    getData();
+    });
   };
 
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
+
   return (
     <>
       <KeyboardAvoidingView

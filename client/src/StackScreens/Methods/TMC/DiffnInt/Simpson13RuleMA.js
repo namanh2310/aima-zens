@@ -5,41 +5,14 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import Syntax from '../../../../Components/Syntax';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Simpson13RuleMA = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/ODE/simpson13ma', {input}) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Simpson 1/3 MA Rule SOL', {
-                data: res.data,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
+import Template from '../../../../Components/Template';
+import { simpson13MAMethod } from '../../../../apis/diffInt.api';
+
+const Simpson13RuleMA = ({ navigation }) => {
   const [input, setInput] = useState({
     function: '0.2+25x-200x^2+675x^3-900x^4+400x^5',
   });
@@ -48,19 +21,32 @@ const Simpson13RuleMA = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
-
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
-  return (
-    // <>
-    //   <Header nav={'TMCList'} />
-    //   <View style={styles.container}>
 
-    //   </View>
-    // </>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await simpson13MAMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Simpson 1/3 MA Rule SOL', {
+          data: res.data,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    })
+  };
+  return (
     <Template>
       <Text style={styles.title}>Simpson 1/3 Multiple-application</Text>
       <View style={styles.input}>
@@ -76,17 +62,17 @@ const Simpson13RuleMA = ({navigation}) => {
           <TextInput
             placeholder="a"
             onChangeText={text => handleChange('a', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="b"
             onChangeText={text => handleChange('b', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="n"
             onChangeText={text => handleChange('n', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
       </View>
@@ -94,7 +80,7 @@ const Simpson13RuleMA = ({navigation}) => {
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
       <TouchableOpacity

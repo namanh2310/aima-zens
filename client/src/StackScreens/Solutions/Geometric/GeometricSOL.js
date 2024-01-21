@@ -1,8 +1,10 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import MathView, {MathText} from 'react-native-math-view';
-import {ScrollView} from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, } from 'react-native';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import MathView from 'react-native-math-view';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import Header from '../../../Components/Header';
 
 const GeometricSOL = () => {
   const [show, setShow] = useState(false);
@@ -13,17 +15,15 @@ const GeometricSOL = () => {
   const shape = route.params.shape;
   const geoType = route.params.type.filter(el => (el.type = type))[0];
   const formula = geoType.formula;
-  console.log(formula);
-  console.log(geoType);
+
   const a = data.a;
   const b = data.b;
   const c = data.c;
   const h = data.h;
-  const angleA = data.angleA;
-  const angleB = data.angleB;
-  const angleC = data.angleC;
+
   return (
     <View style={styles.container}>
+      <Header nav={'GeoFundamental'} />
       <View style={styles.infor}>
         <Text style={styles.text}>Solution:</Text>
         <Text style={styles.firstText}>
@@ -40,22 +40,16 @@ const GeometricSOL = () => {
           <MathView
             style={styles.result}
             resizeMode="cover"
-            math={`~~with~~ ${
-              shape === 'square'
+            math={`~~with~~ ${shape === 'square'
                 ? `a = ${a}`
                 : shape === 'rectangle'
-                ? `a = ${a}, b = ${b}`
-                : shape === 'triangle'
-                ? `a = ${a}, b = ${b}, c = ${c}, h = ${h}`
-                : null
-            }`}
+                  ? `a = ${a}, b = ${b}`
+                  : shape === 'triangle'
+                    ? `a = ${a}, b = ${b}, c = ${c}, h = ${h}`
+                    : null
+              }`}
           />
         </Text>
-        {/* <TouchableOpacity
-          style={styles.showStepBtn}
-          onPress={() => setShow(!show)}>
-          <Text style={styles.textBtn}>Show step</Text>
-        </TouchableOpacity> */}
       </View>
 
       {show && (

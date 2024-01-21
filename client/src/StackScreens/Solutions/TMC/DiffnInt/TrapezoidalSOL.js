@@ -1,14 +1,12 @@
 import {
   StyleSheet,
   Text,
-  View,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
 import {useState} from 'react';
 import {useRoute} from '@react-navigation/native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-import MathView, {MathText} from 'react-native-math-view';
+import {MathText} from 'react-native-math-view';
+
 import Header from '../../../../Components/Header';
 
 const TrapezoidalSOL = ({navigation}) => {

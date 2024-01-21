@@ -5,13 +5,13 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { MathText } from 'react-native-math-view';
+
 import Header from '../../../../Components/Header';
 
-const Simpson13maSOL = ({navigation}) => {
+const Simpson13maSOL = ({ navigation }) => {
   const route = useRoute();
   const data = route.params.data;
   const obj = data.data;
@@ -66,9 +66,8 @@ const Simpson13maSOL = ({navigation}) => {
                   value={`\\(I = (b - a)\\frac{f(x_0)4\\sum{i_{odd}}^{n-1}{f(x_i)} + 2\\sum{j_{even}f(x_j)+f(x_n)}}{3n}   \\)`}
                 />
                 <MathText
-                  value={`\\(I = (${array[array.length - 1]} - ${
-                    array[0]
-                  })\\frac{${denominator}}{3 \\cdot ${n}} = ${I}  \\)`}
+                  value={`\\(I = (${array[array.length - 1]} - ${array[0]
+                    })\\frac{${denominator}}{3 \\cdot ${n}} = ${I}  \\)`}
                 />
                 <Text style={styles.stepTitle}>
                   STEP 4: Calculate the error:

@@ -1,28 +1,26 @@
 import {
   StyleSheet,
   Text,
-  View,
   ScrollView,
-  TouchableOpacity,
   Image,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { MathText } from 'react-native-math-view';
+
 import Header from '../../../../Components/Header';
-import {multiLinear} from '../../../../Image';
+import { multiLinear } from '../../../../Image';
 import MatrixComponent from '../../../../Components/MatrixCompenent';
 
-const MulOrderLRSOL = ({navigation}) => {
+const MulOrderLRSOL = ({ navigation }) => {
   const route = useRoute();
   const data = route.params.data;
   const steps = data.steps;
   const [step, setStep] = useState(false);
-  console.log(steps);
 
   return (
     <>
-      <Header nav={'2nd-order Regression'} />
+      <Header nav={'Multi-order Regression'} />
       <ScrollView style={styles.container}>
         <Text style={styles.headerTitle}>Solution</Text>
         {steps.map((el, index) => (
@@ -32,7 +30,7 @@ const MulOrderLRSOL = ({navigation}) => {
                 <MathText value={'We have the formula'} />
                 <Image
                   style={styles.formulaImg}
-                  source={{uri: multiLinear}}
+                  source={{ uri: multiLinear }}
                   resizeMode={'cover'}
                 />
               </>
@@ -42,7 +40,7 @@ const MulOrderLRSOL = ({navigation}) => {
                 <MatrixComponent matrixArray={el} />
               </>
             ) : (
-              <MathText value={el} />
+              <MathText value={el} key={index} />
             )}
           </>
         ))}
@@ -59,11 +57,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: '#fff',
   },
-  head: {height: 40, backgroundColor: '#b8b8b8'},
-  wrapper: {flexDirection: 'row', backgroundColor: '#d8d8d8'},
-  title: {flex: 1, backgroundColor: '#f6f8fa'},
-  row: {height: 26, width: '199%'},
-  text: {textAlign: 'center', fontSize: 16},
+  head: { height: 40, backgroundColor: '#b8b8b8' },
+  wrapper: { flexDirection: 'row', backgroundColor: '#d8d8d8' },
+  title: { flex: 1, backgroundColor: '#f6f8fa' },
+  row: { height: 26, width: '199%' },
+  text: { textAlign: 'center', fontSize: 16 },
   headerTitle: {
     fontFamily: 'Candal-Regular',
     fontSize: 28,

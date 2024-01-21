@@ -5,60 +5,47 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
-import Syntax from '../../../../Components/Syntax';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-const EulerMethod = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/ODE/eulerMethod', {input}) //For Flask server
-          .then(res => {
-            // setTest(res.data.intEquation);
-            navigation.navigate('Euler Method SOL', {
-              data: res.data.data,
-              intEquation: res.data.intEquation,
-              equation: res.data.equation,
-              c_constant: res.data.c_constant,
-              step_size: input.h,
-            });
-            setErrorMessage(null);
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
-  const [input, setInput] = useState({function: '-2x^3 + 12x^2 - 20x + 8.5'});
+import Template from '../../../../Components/Template';
+import { eulerMethod } from '../../../../apis/ordinary.api';
+
+const EulerMethod = ({ navigation }) => {
+  const [input, setInput] = useState({ function: '-2x^3 + 12x^2 - 20x + 8.5' });
   const [result, setResult] = useState('-2x^3 + 12x^2 - 20x + 8.5');
   const [errorMessage, setErrorMessage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
 
-  return (
-    // <>
-    //   <Header nav={'TMCList'} />
-    //   <View style={styles.container}>
+  const handleSubmit = async e => {
+    e.preventDefault();
 
-    //   </View>
-    // </>
+    await eulerMethod(input).then(res => {
+      navigation.navigate('Euler Method SOL', {
+        data: res.data.data,
+        intEquation: res.data.intEquation,
+        equation: res.data.equation,
+        c_constant: res.data.c_constant,
+        step_size: input.h,
+      });
+      setErrorMessage(null);
+    }).catch(err => {
+      if (err.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (err.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    });
+  };
+
+  return (
     <Template>
       <Text style={styles.title}>EULER METHOD</Text>
       <View style={styles.input}>
@@ -74,22 +61,22 @@ const EulerMethod = ({navigation}) => {
           <TextInput
             placeholder="xi"
             onChangeText={text => handleChange('xi', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="xf"
             onChangeText={text => handleChange('xf', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="h"
             onChangeText={text => handleChange('h', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="y"
             onChangeText={text => handleChange('y', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
       </View>
@@ -98,7 +85,7 @@ const EulerMethod = ({navigation}) => {
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
 
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
       <TouchableOpacity

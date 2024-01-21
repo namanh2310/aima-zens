@@ -5,54 +5,14 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import Syntax from '../../../../Components/Syntax';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 
-const TrapezoidalMA = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/DiffnInt/trapezoidalMA', {
-            input,
-          }) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('TrapezoidalMA Rule SOL', {
-                data: res.data.data,
-                h: res.data.h,
-                middle_sum: res.data.middle_sum,
-                slope_sum: res.data.slope_sum,
-                first_deri: res.data.first_deri,
-                second_deri: res.data.second_deri,
-                f_2_der_mean: res.data.f_2_der_mean,
-                array: res.data.array,
-                equation: input.function.replace(/\*/g, ''),
-                a: input.a,
-                b: input.b,
-                n: input.n,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
+import Template from '../../../../Components/Template';
+import { trapzoidalMAMethod } from '../../../../apis/diffInt.api';
+
+const TrapezoidalMA = ({ navigation }) => {
   const [input, setInput] = useState({
     function: '0.2+25x-200x^2+675x^3-900x^4+400x^5',
   });
@@ -61,18 +21,44 @@ const TrapezoidalMA = ({navigation}) => {
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
-  return (
-    // <>
-    //   <Header nav={'TMCList'} />
-    //   <View style={styles.container}>
 
-    //   </View>
-    // </>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await trapzoidalMAMethod(input).then((res) => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('TrapezoidalMA Rule SOL', {
+          data: res.data.data,
+          h: res.data.h,
+          middle_sum: res.data.middle_sum,
+          slope_sum: res.data.slope_sum,
+          first_deri: res.data.first_deri,
+          second_deri: res.data.second_deri,
+          f_2_der_mean: res.data.f_2_der_mean,
+          array: res.data.array,
+          equation: input.function.replace(/\*/g, ''),
+          a: input.a,
+          b: input.b,
+          n: input.n,
+        });
+        setErrorMessage(null);
+      }
+    }).catch((error) => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    })
+  };
+
+  return (
     <Template>
       <Text style={styles.title}>TrapezoidalMA RULE</Text>
       <View style={styles.input}>
@@ -88,17 +74,17 @@ const TrapezoidalMA = ({navigation}) => {
           <TextInput
             placeholder="a"
             onChangeText={text => handleChange('a', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="b"
             onChangeText={text => handleChange('b', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="n"
             onChangeText={text => handleChange('n', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
       </View>
@@ -107,7 +93,7 @@ const TrapezoidalMA = ({navigation}) => {
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
 
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
       <TouchableOpacity

@@ -1,16 +1,15 @@
 import {
   StyleSheet,
   Text,
-  View,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { MathText } from 'react-native-math-view';
+
 import Header from '../../../../Components/Header';
 
-const LRegressionSOL = ({navigation}) => {
+const LRegressionSOL = ({ navigation }) => {
   const route = useRoute();
   const data = route.params.data;
   const [step, setStep] = useState(false);
@@ -86,12 +85,12 @@ const LRegressionSOL = ({navigation}) => {
 export default LRegressionSOL;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, backgroundColor: '#fff'},
-  head: {height: 40, backgroundColor: '#b8b8b8'},
-  wrapper: {flexDirection: 'row', backgroundColor: '#d8d8d8'},
-  title: {flex: 1, backgroundColor: '#f6f8fa'},
-  row: {height: 26, width: '199%'},
-  text: {textAlign: 'center', fontSize: 16},
+  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  head: { height: 40, backgroundColor: '#b8b8b8' },
+  wrapper: { flexDirection: 'row', backgroundColor: '#d8d8d8' },
+  title: { flex: 1, backgroundColor: '#f6f8fa' },
+  row: { height: 26, width: '199%' },
+  text: { textAlign: 'center', fontSize: 16 },
   headerTitle: {
     fontFamily: 'Candal-Regular',
     fontSize: 28,

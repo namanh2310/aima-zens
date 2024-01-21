@@ -1,8 +1,9 @@
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React from 'react';
-import Header from '../../../Components/Header';
+import { useRoute } from '@react-navigation/native';
+
 import MatrixComponent from '../../../Components/MatrixCompenent';
-import {useRoute} from '@react-navigation/native';
+import Header from '../../../Components/Header';
 
 const LinearAlgebraSOL = () => {
   const router = useRoute();
@@ -11,6 +12,7 @@ const LinearAlgebraSOL = () => {
   const result = router.params.data.result;
   const category = router.params.data.category;
   const step = router.params.data.step;
+  
   return (
     <>
       <Header />
@@ -32,7 +34,7 @@ const LinearAlgebraSOL = () => {
             {step.map((el, index) => (
               <View style={styles.step}>
                 {typeof el === 'object' ? (
-                  <MatrixComponent matrixArray={el} />
+                  <MatrixComponent matrixArray={el} key={index} />
                 ) : (
                   <Text style={styles.stepText} key={index}>
                     {el}

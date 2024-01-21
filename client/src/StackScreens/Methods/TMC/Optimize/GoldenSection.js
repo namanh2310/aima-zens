@@ -5,52 +5,18 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import Syntax from '../../../../Components/Syntax';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faQuestion, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
-import {useRoute} from '@react-navigation/native';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { useRoute } from '@react-navigation/native';
 
-const GoldenSection = ({navigation}) => {
+import Template from '../../../../Components/Template';
+import { goldenSectionMethod } from '../../../../apis/optimize.api';
+
+const GoldenSection = ({ navigation }) => {
   const route = useRoute();
   const scan_funct = route.params.function;
   const scan_type = route.params.type;
-  const replaceFunction = funct => {
-    return funct.replace(/[{}]/g, '');
-  };
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/Optimize/goldensection', {
-            input,
-          }) //here
-          .then(res => {
-            // setResult(res.data.data);
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Golden Section SOL', {
-                data: res.data.data,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-        console.log(error);
-      }
-    };
-    getData();
-  };
   const [input, setInput] = useState({
     function: scan_funct
       ? replaceFunction(scan_funct)
@@ -63,21 +29,40 @@ const GoldenSection = ({navigation}) => {
   );
   const [errorMessage, setErrorMessage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const replaceFunction = funct => {
+    return funct.replace(/[{}]/g, '');
+  };
+
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
   };
 
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await goldenSectionMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Golden Section SOL', {
+          data: res.data.data,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    })
+  };
+
   return (
-    // <>
-    //   <Header nav={'TMCList'} />
-
-    //   <View style={styles.container}>
-
-    //   </View>
-    // </>
     <Template>
       <Text style={styles.title}>GOLDEN SECTION</Text>
       <View style={styles.input}>
@@ -93,24 +78,24 @@ const GoldenSection = ({navigation}) => {
           <TextInput
             placeholder="xl"
             onChangeText={text => handleChange('xl', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="xu"
             onChangeText={text => handleChange('xu', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
           <TextInput
             placeholder="error"
             onChangeText={text => handleChange('es', text)}
-            style={{...styles.inputField, ...styles.variableField}}
+            style={{ ...styles.inputField, ...styles.variableField }}
           />
         </View>
         <View style={styles.typeFields}>
           <TouchableOpacity
             style={
               type === 'maximum'
-                ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+                ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
                 : styles.type
             }
             onPress={() => {
@@ -122,7 +107,7 @@ const GoldenSection = ({navigation}) => {
           <TouchableOpacity
             style={
               type === 'minimum'
-                ? {borderWidth: 3, borderColor: '#2874fc', ...styles.type}
+                ? { borderWidth: 3, borderColor: '#2874fc', ...styles.type }
                 : styles.type
             }
             onPress={() => {
@@ -137,7 +122,7 @@ const GoldenSection = ({navigation}) => {
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
       <TouchableOpacity

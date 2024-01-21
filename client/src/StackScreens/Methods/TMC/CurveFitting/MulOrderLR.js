@@ -6,45 +6,40 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
-import {useState} from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Header from '../../../../Components/Header';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { multiOrderLRMethod } from '../../../../apis/curveFit.api';
 
-const MulOrderLR = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/CFitting/mulOrderLR', {input}) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Multi-order Regression SOL', {
-                data: res.data,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-    console.log(input);
-  };
+const MulOrderLR = ({ navigation }) => {
   const [input, setInput] = useState();
   const [result, setResult] = useState(null);
-  const handleChange = (name, text) => {
-    setInput({...input, [name]: text.split(',').map(parseFloat)});
-  };
   const [errorMessage, setErrorMessage] = useState(null);
+
+  const handleChange = (name, text) => {
+    setInput({ ...input, [name]: text.split(',').map(parseFloat) });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await multiOrderLRMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Multi-order Regression SOL', {
+          data: res.data,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    })
+  };
 
   return (
     <>
@@ -101,7 +96,7 @@ const MulOrderLR = ({navigation}) => {
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
           <Text style={styles.submitText}>Calculate</Text>
         </TouchableOpacity>
-        <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+        <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
           {errorMessage}
         </Text>
       </KeyboardAwareScrollView>

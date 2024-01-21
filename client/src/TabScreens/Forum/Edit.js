@@ -18,7 +18,7 @@ import {
   SelectList,
   MultipleSelectList,
 } from 'react-native-dropdown-select-list';
-import {updatePost} from '../../Api';
+import {updatePost} from '../../apis';
 
 const Edit = ({navigation}) => {
   const [img, setImg] = useState();

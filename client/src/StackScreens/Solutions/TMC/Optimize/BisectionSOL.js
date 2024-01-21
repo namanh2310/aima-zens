@@ -1,8 +1,9 @@
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import React from 'react';
-import {useRoute} from '@react-navigation/native';
-import MathView, {MathText} from 'react-native-math-view';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import{ MathText } from 'react-native-math-view';
+import { Table, Row } from 'react-native-table-component';
+
 import Header from '../../../../Components/Header';
 
 const BisectionSOL = () => {
@@ -20,7 +21,7 @@ const BisectionSOL = () => {
         <Text style={styles.title}>RESULT!</Text>
         <ScrollView style={styles.tabField} horizontal={true}>
           <View>
-            <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+            <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
               <Row
                 data={tableHead}
                 widthArr={widthArr}
@@ -29,7 +30,7 @@ const BisectionSOL = () => {
               />
             </Table>
             <ScrollView style={styles.dataWrapper}>
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+              <Table borderStyle={{ borderWidth: 1, borderColor: '#C1C0B9' }}>
                 {tableData.map((rowData, index) => (
                   <Row
                     key={index}
@@ -37,7 +38,7 @@ const BisectionSOL = () => {
                     widthArr={widthArr}
                     style={[
                       styles.row,
-                      index % 2 && {backgroundColor: '#F7F6E7'},
+                      index % 2 && { backgroundColor: '#F7F6E7' },
                     ]}
                     textStyle={styles.text}
                   />

@@ -5,51 +5,45 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
 import Template from '../../../Components/Template';
+import { basicProbaMethod } from '../../../apis/proba.api';
 
-const ProbaCal = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/Probability/probaCal', {
-            input,
-          }) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Probability Calculator SOL', {
-                data: res.data,
-                pA: input.A,
-                pB: input.B,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
+const ProbaCal = ({ navigation }) => {
   const [input, setInput] = useState({});
   const [errorMessage, setErrorMessage] = useState(null);
   const [result, setResult] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text});
+    setInput({ ...input, [name]: text });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await basicProbaMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Probability Calculator SOL', {
+          data: res.data,
+          pA: input.A,
+          pB: input.B,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    });
   };
 
   return (
@@ -80,7 +74,7 @@ const ProbaCal = ({navigation}) => {
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
     </Template>

@@ -1,6 +1,6 @@
 import {takeLatest, call, put} from 'redux-saga/effects';
 import * as actions from '../actions';
-import * as api from '../../Api';
+import * as api from '../../apis';
 import {
   REGISTER_REQUEST,
   LOGIN_REQUEST,

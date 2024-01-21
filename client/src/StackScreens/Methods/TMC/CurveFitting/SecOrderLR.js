@@ -5,52 +5,42 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Header from '../../../../Components/Header';
 import Template from '../../../../Components/Template';
+import { secOrderLRMethod } from '../../../../apis/curveFit.api';
 
-const SecOrderLR = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/CFitting/secOrderLR', {input}) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('2nd-order Regression SOL', {
-                data: res.data,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-  };
+const SecOrderLR = ({ navigation }) => {
   const [input, setInput] = useState();
   const [result, setResult] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text.split(',').map(parseFloat)});
+    setInput({ ...input, [name]: text.split(',').map(parseFloat) });
   };
-  return (
-    // <>
-    //   <Header nav={'TMCList'} />
-    //   <View style={styles.container}>
 
-    //   </View>
-    // </>
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await secOrderLRMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('2nd-order Regression SOL', {
+          data: res.data,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    });
+  };
+
+  return (
     <Template>
       <Text style={styles.title}>2nd ORDER LINEAR REGRESSION</Text>
       <View style={styles.input}>
@@ -87,7 +77,7 @@ const SecOrderLR = ({navigation}) => {
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
     </Template>

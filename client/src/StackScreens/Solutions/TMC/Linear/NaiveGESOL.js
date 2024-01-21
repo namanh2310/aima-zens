@@ -1,8 +1,8 @@
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import React from 'react';
 
 import MatrixComponent from '../../../../Components/MatrixCompenent';
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import Header from '../../../../Components/Header';
 
 const NaiveGESOL = () => {

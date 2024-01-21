@@ -1,21 +1,19 @@
 import {
   StyleSheet,
   Text,
-  View,
   ScrollView,
-  TouchableOpacity,
   Image,
 } from 'react-native';
-import {useState} from 'react';
-import {useRoute} from '@react-navigation/native';
-import MathView, {MathText} from 'react-native-math-view';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { MathText } from 'react-native-math-view';
 import Header from '../../../../Components/Header';
-import formulaImg from '../../../../../assets/image/secOrderLR.png';
-import {useSelector, useDispatch} from 'react-redux';
-import {auth$} from '../../../../Redux/selectors';
-import {linearFirstImage} from '../../../../Image';
+import { useSelector } from 'react-redux';
 
-const SecOrderLRSOL = ({navigation}) => {
+import { auth$ } from '../../../../Redux/selectors';
+import { linearFirstImage } from '../../../../Image';
+
+const SecOrderLRSOL = ({ navigation }) => {
   const auth = useSelector(auth$);
   var formula = require('../../../../../assets/image/secOrderLR.png');
   const route = useRoute();
@@ -76,7 +74,7 @@ const SecOrderLRSOL = ({navigation}) => {
 
         <Image
           style={styles.formulaImg}
-          source={{uri: linearFirstImage}}
+          source={{ uri: linearFirstImage }}
           resizeMode={'cover'}
         />
 
@@ -134,11 +132,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: '#fff',
   },
-  head: {height: 40, backgroundColor: '#b8b8b8'},
-  wrapper: {flexDirection: 'row', backgroundColor: '#d8d8d8'},
-  title: {flex: 1, backgroundColor: '#f6f8fa'},
-  row: {height: 26, width: '199%'},
-  text: {textAlign: 'center', fontSize: 16},
+  head: { height: 40, backgroundColor: '#b8b8b8' },
+  wrapper: { flexDirection: 'row', backgroundColor: '#d8d8d8' },
+  title: { flex: 1, backgroundColor: '#f6f8fa' },
+  row: { height: 26, width: '199%' },
+  text: { textAlign: 'center', fontSize: 16 },
   headerTitle: {
     fontFamily: 'Candal-Regular',
     fontSize: 28,

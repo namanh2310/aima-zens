@@ -5,55 +5,40 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {useState} from 'react';
-import axios from 'axios';
-import Header from '../../../../Components/Header';
-import Template from '../../../../Components/Template';
+import { useState } from 'react';
 
-const LRegression = ({navigation}) => {
-  const handleSubmit = e => {
-    e.preventDefault();
-    const getData = async () => {
-      try {
-        await axios
-          .post('http://localhost:8081/CFitting/lRegression', {
-            input,
-          }) //For Flask server
-          .then(res => {
-            if (res.data.message) {
-              setErrorMessage(res.data.message);
-            } else {
-              navigation.navigate('Linear Regression SOL', {
-                data: res.data,
-              });
-              setErrorMessage(null);
-            }
-          });
-      } catch (error) {
-        if (error.response.status === 500) {
-          setErrorMessage('Please re-check the input fields');
-        } else if (error.response.status === 404) {
-          setErrorMessage('Your are disconnecting with network!');
-        }
-      }
-    };
-    getData();
-    console.log(input);
-  };
+import Template from '../../../../Components/Template';
+import { linearRegressionMethod } from '../../../../apis/curveFit.api';
+
+const LRegression = ({ navigation }) => {
   const [input, setInput] = useState();
   const [result, setResult] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const handleChange = (name, text) => {
-    setInput({...input, [name]: text.split(',').map(parseFloat)});
+    setInput({ ...input, [name]: text.split(',').map(parseFloat) });
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    await linearRegressionMethod(input).then(res => {
+      if (res.data.message) {
+        setErrorMessage(res.data.message);
+      } else {
+        navigation.navigate('Linear Regression SOL', {
+          data: res.data,
+        });
+        setErrorMessage(null);
+      }
+    }).catch(error => {
+      if (error.response.status === 500) {
+        setErrorMessage('Please re-check the input fields');
+      } else if (error.response.status === 404) {
+        setErrorMessage('Your are disconnecting with network!');
+      }
+    })
   };
   return (
-    // <>
-    //   <Header nav={'TMCList'} />
-    //   <View style={styles.container}>
-
-    //   </View>
-    // </>
     <Template>
       <Text style={styles.title}>LINEAR REGRESSION</Text>
       <View style={styles.input}>
@@ -90,7 +75,7 @@ const LRegression = ({navigation}) => {
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
         <Text style={styles.submitText}>Calculate</Text>
       </TouchableOpacity>
-      <Text style={{fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16}}>
+      <Text style={{ fontFamily: 'Kanit-Medium', color: 'red', fontSize: 16 }}>
         {errorMessage}
       </Text>
     </Template>

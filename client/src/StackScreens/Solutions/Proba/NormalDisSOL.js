@@ -2,14 +2,12 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   ScrollView,
-  FlatList,
-  Animated,
 } from 'react-native';
 import React from 'react';
-import {useRoute} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import MathView from 'react-native-math-view';
+
 import Header from '../../../Components/Header';
 
 const NormalSOL = () => {
@@ -94,12 +92,12 @@ const NormalSOL = () => {
 export default NormalSOL;
 
 const styles = StyleSheet.create({
-  container: {flex: 1, padding: 16, backgroundColor: '#fff'},
-  head: {height: 40, backgroundColor: '#b8b8b8'},
-  wrapper: {flexDirection: 'row', backgroundColor: '#d8d8d8'},
-  title: {flex: 1, backgroundColor: '#f6f8fa'},
-  row: {height: 26, width: '199%'},
-  text: {textAlign: 'center', fontSize: 16},
+  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
+  head: { height: 40, backgroundColor: '#b8b8b8' },
+  wrapper: { flexDirection: 'row', backgroundColor: '#d8d8d8' },
+  title: { flex: 1, backgroundColor: '#f6f8fa' },
+  row: { height: 26, width: '199%' },
+  text: { textAlign: 'center', fontSize: 16 },
   headerTitle: {
     fontFamily: 'Candal-Regular',
     fontSize: 28,
