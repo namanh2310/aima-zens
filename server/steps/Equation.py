@@ -15,6 +15,8 @@ from steps.Integral import handleIntegral
 
 
 def handleEquation(step, expr, data, solution):
+    # if len(solution) > 500:
+    #     print(len(solution))
     rhs = expr.split('=')[-1].strip()
     lhs = expr.split('=')[0].strip()
     len_x = 0
@@ -46,6 +48,8 @@ def handleEquation(step, expr, data, solution):
     def immediately_cal(equation):
         return latex2latex(equation)
 
+    
+
     def rounded_cal(equation):
         latex_eq = latex(equation)
         if len(latex2latex(latex_eq)) > 200:
@@ -61,6 +65,8 @@ def handleEquation(step, expr, data, solution):
             return rounded_vals
         else:
             return immediately_cal(latex_eq)
+    print(len(solution))
+  
 
     def quadric_cal(equation):
         a = coefficients[0]
