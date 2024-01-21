@@ -55,7 +55,7 @@ const Fundamental = ({navigation}) => {
   const regenerateScanResult = async () => {
     setIsLoading(true);
     console.log('scanImg', scanImg);
-    await AIScannerApp(true, scanImg)
+    await AIScannerApp({regenerate_status: true, img: scanImg})
       .then(res => {
         setModalVisible(true);
         setOptions(res.data.res_list);
@@ -69,6 +69,8 @@ const Fundamental = ({navigation}) => {
   };
 
   const editEquation = mathText => {
+    setModalVisible(false);
+
     navigation.navigate('Fundamental', {mathText});
   };
 
