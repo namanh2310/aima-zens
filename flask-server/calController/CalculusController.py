@@ -19,7 +19,7 @@ class CalculusController:
             try:
                 step = []
                 data = request.json['data']
-                print(data)
+                print("adadadadada", data)
                 raw_data = repr(data.replace("dx", ""))
                 print(raw_data)
                 try: 

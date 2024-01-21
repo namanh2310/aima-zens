@@ -282,7 +282,7 @@ export const html = `
         },
         {
           fe: 'power',
-          be: '^{}'
+          be: '\\\\^{}'
         },
         {
           fe: 'frac',
