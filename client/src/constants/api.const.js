@@ -1,4 +1,6 @@
-export const LOCAL_URL = "http://localhost:8081/";
+// export const LOCAL_URL = "http://localhost:8081/";
+
+export const LOCAL_URL = "http://128.199.209.87:3000/";
 
 export const URL_BACKGROUND = "https://img.freepik.com/premium-vector/mathematics-seamless-pattern-math-background_8071-25010.jpg";
 
