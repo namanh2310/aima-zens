@@ -7,19 +7,19 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { useState } from 'react';
-import { useRoute } from '@react-navigation/native';
-import MathView, { MathText } from 'react-native-math-view';
+import {ScrollView} from 'react-native-gesture-handler';
+import {useState} from 'react';
+import {useRoute} from '@react-navigation/native';
+import MathView, {MathText} from 'react-native-math-view';
 import axios from 'axios';
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import {faPencil} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 import Header from '../../../Components/Header';
-import { fundamentalCaluclus } from '../../../apis/cal.api';
-import { AIScannerApp } from '../../../apis/ai.api';
+import {fundamentalCaluclus} from '../../../apis/cal.api';
+import {AIScannerApp} from '../../../apis/ai.api';
 
-const Fundamental = ({ navigation }) => {
+const Fundamental = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [options, setOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,11 +31,11 @@ const Fundamental = ({ navigation }) => {
   const step = route.params.step;
   const img = route.params.img;
 
-  const handleSubmit = async (data) => {
-    await fundamentalCaluclus(data).then((res) => {
+  const handleSubmit = async data => {
+    await fundamentalCaluclus(data).then(res => {
       try {
         if (res.data.message) {
-          console.error(res.data.message)
+          console.error(res.data.message);
         } else {
           if (res.data.result.length < 1000) {
             navigation.navigate('ReFundamental SOL', {
@@ -54,21 +54,24 @@ const Fundamental = ({ navigation }) => {
 
   const regenerateScanResult = async () => {
     setIsLoading(true);
-    await AIScannerApp({
-      regenerate_status: true,
-      img: scanImg,
-    }).then((res) => {
-      setModalVisible(true);
-      setOptions(res.data.res_list);
-    }).catch((err) => {
-      navigation.navigate('TabNavigator');
-    }).finally(() => {
-      setIsLoading(false);
-    });
+    console.log('scanImg', scanImg);
+    await AIScannerApp({regenerate_status: true, img: scanImg})
+      .then(res => {
+        setModalVisible(true);
+        setOptions(res.data.res_list);
+      })
+      .catch(err => {
+        navigation.navigate('TabNavigator');
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
   const editEquation = mathText => {
-    navigation.navigate('Fundamental', { mathText });
+    setModalVisible(false);
+
+    navigation.navigate('Fundamental', {mathText});
   };
 
   const CustomModal = () => {
@@ -258,10 +261,10 @@ const Fundamental = ({ navigation }) => {
               typeof result === 'string' && result.length <= 40
                 ? styles.result
                 : typeof result === 'object' && result.length >= 4
-                  ? styles.result_scale
-                  : typeof result === 'string' && result.length >= 40
-                    ? styles.result_scale
-                    : styles.result
+                ? styles.result_scale
+                : typeof result === 'string' && result.length >= 40
+                ? styles.result_scale
+                : styles.result
             }
             resizeMode="cover"
             math={typeof result !== 'string' ? result.toString() : result}
@@ -276,7 +279,7 @@ const Fundamental = ({ navigation }) => {
         </View>
 
         <View style={styles.step}>
-          <ScrollView style={{ marginHorizontal: '5%' }}>
+          <ScrollView style={{marginHorizontal: '5%'}}>
             <Text
               style={{
                 color: '#8252E7',
@@ -292,8 +295,8 @@ const Fundamental = ({ navigation }) => {
             ) : (
               <>
                 {equation.includes('x') &&
-                  equation.includes('=') &&
-                  step.length === 1 ? (
+                equation.includes('=') &&
+                step.length === 1 ? (
                   <UnstepEquation />
                 ) : (
                   <>
@@ -308,8 +311,8 @@ const Fundamental = ({ navigation }) => {
             )}
             {img && (
               <Image
-                source={{ uri: img }}
-                style={{ width: '100%', height: undefined, aspectRatio: 1.5 }}
+                source={{uri: img}}
+                style={{width: '100%', height: undefined, aspectRatio: 1.5}}
               />
             )}
           </ScrollView>
