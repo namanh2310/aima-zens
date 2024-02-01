@@ -54,3 +54,50 @@ def sketchGraph(data, solution):
     base64_data_uri = "data:image/png;base64," + base64_encoded
 
     return base64_data_uri
+
+
+def extract_bf(input_str):
+    # Find the position of the first '{' after "\\bf"
+    start_index = input_str.find(r'\bf') + 3  # 3 is the length of "\bf"
+
+    # Initialize counters for '{' and '}'
+    open_count = 0
+    close_count = 0
+
+    # Iterate from the starting position to find the matching '}'
+    for i in range(start_index, len(input_str)):
+        if input_str[i] == '{':
+            open_count += 1
+        elif input_str[i] == '}':
+            close_count += 1
+
+        # Check if the total count is even
+        if open_count == close_count and open_count > 0:
+            # Remove the first '{' and last '}'
+            substring = input_str[start_index + 1:i]
+            return substring
+
+    # Return an empty string if no valid substring is found
+    return ''
+
+
+def replace_latex_math(input_string):
+    replacements = [
+        (r'\\dx', ''),
+        (r'\\chi', 'x'),
+        (r'\\left', ''),
+        (r'\\right', ''),
+        (r'\\mathbf{x}', 'x'),
+        (r'\\operatorname\*{lim}', r'\\lim'),
+        ('arrow', r'\\to'),
+        (r'\\big\(', '('),
+        (r'\\big\)', ')')
+    ]
+
+    for pattern, replacement in replacements:
+        input_string = re.sub(pattern, replacement, input_string)
+
+    if r"\bf" in input_string:
+      input_string = input_string.replace(r"\bf{", "").replace(extract_bf(input_string) + "}", f"{extract_bf(input_string)}")
+      
+    return input_string

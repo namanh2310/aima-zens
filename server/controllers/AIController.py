@@ -4,6 +4,7 @@ from sympy import *
 
 from latex2sympy2 import latex2sympy, latex2latex
 from pix2tex import cli as pix2tex
+from utils.CalModule import replace_latex_math
 
 from io import BytesIO
 import os
@@ -168,7 +169,9 @@ class AIController:
                     img = image.resize(new_size)  
                     new_dimension = get_dimension(img)
                     math = model(img)
-                    equation = math.replace("\\dx", "")
+                    # equation = math.replace("\\dx", "").replace("\\chi", "x").replace("\\left", "").replace("\\right", "").replace("\\mathbf{x}", "x").replace("\\operatorname*{lim}", "\\lim").replace("arrow", "\\to")
+                    equation = replace_latex_math(math)
+                    print(equation)
                     return equation
 
                 equation = predict_img(80, 600, 160, 1000, preprocess_img)
@@ -191,7 +194,7 @@ class AIController:
                 print(f"ValueError: {ve}")
                 # Return a JSON response with an error message and a 500 status code
                 return jsonify({'error': 'An error occurred while processing the request.'}), 500
-
+                
             except Exception as e:
                 # Catch any other exceptions and return an appropriate error response
                 print(f"An unexpected error occurred: {e}")
